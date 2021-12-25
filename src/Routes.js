@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes as Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import Signup from './user/Signup';
 import Signin from './user/Signin';
@@ -11,9 +11,9 @@ const Routes = () => {
     <BrowserRouter>
       <Menu />
       <Switch>
-        <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/" exact component={Home} />
+        <Route path="/signin" exact component={Signin} />
+        <Route path="/signup" exact component={Signup} />
       </Switch>
     </BrowserRouter>
   );
