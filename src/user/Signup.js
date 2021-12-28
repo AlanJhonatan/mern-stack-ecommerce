@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-
+import { Link } from 'react-router-dom';
 import Layout from '../core/Layout';
-// import { API } from '../config';
+import { API } from '../config';
 
 const Signup = () => {
   const [ values, setValues ] = useState({
@@ -12,9 +12,61 @@ const Signup = () => {
     success: false,
   });
 
+  const { name, email, password, success, error } = values;
+
   const handleChange = (event, name) => {
     setValues({...values, error: false, [name]: event.target.value});
   }
+
+  const signup = (user) => {
+    return fetch(`${API}/signup`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(user),
+    })
+    .then(response => {
+      return response.json();
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }
+
+  const clickSubmit = (event) => {
+    event.preventDefault();
+    setValues({ ...values, error: false });
+    signup({name, email, password})
+    .then(data => {
+      if(data.error) {
+        setValues({...values, error: data.error, success: false});
+        return;
+      }
+
+      setValues({
+        ...values,
+        name: '',
+        email: '',
+        password: '',
+        error: '',
+        success: true,
+      })
+    })
+  }
+
+  const showError = () => (
+    <div className="alert alert-danger" style={{ display: error ? '' : 'none'}}>
+      { error }
+    </div>
+  );
+
+  const showSuccess = () => (
+    <div className="alert alert-info" style={{ display: success ? '' : 'none'}}>
+      New account is created ! Please, <Link to="/signin">signin.</Link>
+    </div>
+  );
 
   const signUpForm = () => (
     <form>
@@ -45,7 +97,10 @@ const Signup = () => {
         />
       </div>
 
-      <button className='btn btn-primary'>
+      <button
+        className='btn btn-primary'
+        onClick={clickSubmit}
+      >
         Submit
       </button>
     </form>
@@ -57,8 +112,9 @@ const Signup = () => {
       description='Signup to Node React E-commerce App'
       className='container col-md-8 offset-md-2'
     >
+      {showError()}
+      {showSuccess()}
       {signUpForm()}
-      {JSON.stringify(values)}
     </Layout>
   );
 }
