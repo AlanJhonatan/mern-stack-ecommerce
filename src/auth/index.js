@@ -33,3 +33,12 @@ export const signin = (user) => {
       console.log(err);
     });
 };
+
+export const authenticate = (data, next) => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  localStorage.setItem('jwt', JSON.stringify(data));
+  next();
+};
