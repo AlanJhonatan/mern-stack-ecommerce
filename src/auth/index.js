@@ -5,14 +5,31 @@ export const signup = (user) => {
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(user),
   })
-  .then(response => {
-    return response.json();
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const signin = (user) => {
+  return fetch(`${API}/signin`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(user),
   })
-  .catch(err => {
-    console.log(err);
-  })
-}
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
