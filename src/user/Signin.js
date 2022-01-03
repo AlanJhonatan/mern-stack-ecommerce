@@ -58,6 +58,9 @@ const Signin = () => {
         return <Redirect to='/user/dashboard' />;
       }
     }
+    if (isAuthenticated()) {
+      return <Redirect to='/' />;
+    }
   };
 
   const signinForm = () => (
