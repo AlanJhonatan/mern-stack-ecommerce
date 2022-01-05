@@ -34,7 +34,6 @@ const AddProduct = () => {
     quantity,
     loading,
     error,
-    createProduct,
     redirectToProfile,
     formData,
   } = values;
@@ -49,7 +48,28 @@ const AddProduct = () => {
     setValues({ ...values, [name]: value });
   };
 
-  const clickSubmit = (event) => {};
+  const clickSubmit = (event) => {
+    event.preventDefault();
+    setValues({ ...values, error: '', loading: true });
+
+    createProduct(user._id, token, formData).then((data) => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+        return;
+      }
+
+      setValues({
+        ...values,
+        name: '',
+        description: '',
+        photo: '',
+        price: '',
+        quantity: '',
+        loading: false,
+        createProduct: data.name,
+      });
+    });
+  };
 
   const newPostForm = () => (
     <form className='mb-3' onSubmit={clickSubmit}>
@@ -97,8 +117,9 @@ const AddProduct = () => {
 
       <div className='form-group'>
         <label className='text-muted'>Category</label>
-        <select onChange={handleChange('price')} className='form-control'>
+        <select onChange={handleChange('category')} className='form-control'>
           <option value='61d3a1928b07bf6bd7f2f4a0'>Node</option>
+          <option value='61d3a1c18b07bf6bd7f2f4a3'>React JS</option>
         </select>
       </div>
 
