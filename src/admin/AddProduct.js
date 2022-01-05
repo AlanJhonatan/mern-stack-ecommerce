@@ -61,7 +61,7 @@ const AddProduct = () => {
   const handleChange = (name) => (event) => {
     const value = name === 'photo' ? event.target.files[0] : event.target.value;
     formData.set(name, value);
-    setValues({ ...values, [name]: value });
+    setValues({ ...values, [name]: value, error: false });
   };
 
   const clickSubmit = (event) => {
@@ -177,16 +177,16 @@ const AddProduct = () => {
 
   const showSuccess = () => (
     <div
-      className='alert alert-danger'
+      className='alert alert-success'
       style={{ display: createdProduct ? '' : 'none' }}
     >
-      <h2>{createdProduct}</h2>
+      <h2>Created: {createdProduct}</h2>
     </div>
   );
 
   const showLoading = () =>
     loading && (
-      <div className='alert alert-showSuccess'>
+      <div className='alert alert-info'>
         <h2>Loading...</h2>
       </div>
     );
