@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Layout from '../core/Layout';
 import { isAuthenticated } from '../auth';
 
-import { createProduct } from './apiAdmin';
+import { createProduct, getCategories } from './apiAdmin';
 
 const AddProduct = () => {
   const { user, token } = isAuthenticated();
@@ -19,7 +19,7 @@ const AddProduct = () => {
     photo: '',
     loading: false,
     error: '',
-    createProduct: '',
+    createdProduct: '',
     redirectToProfile: false,
     formData: '',
   });
@@ -34,12 +34,28 @@ const AddProduct = () => {
     quantity,
     loading,
     error,
+    createdProduct,
     redirectToProfile,
     formData,
   } = values;
 
+  const init = () => {
+    getCategories().then((data) => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+        return;
+      }
+
+      setValues({
+        ...values,
+        categories: data.categories,
+        formData: new FormData(),
+      });
+    });
+  };
+
   useEffect(() => {
-    setValues({ ...values, formData: new FormData() });
+    init();
   }, []);
 
   const handleChange = (name) => (event) => {
@@ -66,7 +82,7 @@ const AddProduct = () => {
         price: '',
         quantity: '',
         loading: false,
-        createProduct: data.name,
+        createdProduct: data.name,
       });
     });
   };
@@ -118,8 +134,13 @@ const AddProduct = () => {
       <div className='form-group'>
         <label className='text-muted'>Category</label>
         <select onChange={handleChange('category')} className='form-control'>
-          <option value='61d3a1928b07bf6bd7f2f4a0'>Node</option>
-          <option value='61d3a1c18b07bf6bd7f2f4a3'>React JS</option>
+          <option>Select an Option</option>
+          {categories &&
+            categories.map((category, idx) => (
+              <option key={idx} value={category._id}>
+                {category.name}
+              </option>
+            ))}
         </select>
       </div>
 
@@ -145,13 +166,52 @@ const AddProduct = () => {
     </form>
   );
 
+  const showError = () => (
+    <div
+      className='alert alert-danger'
+      style={{ display: error ? '' : 'none' }}
+    >
+      {error}
+    </div>
+  );
+
+  const showSuccess = () => (
+    <div
+      className='alert alert-danger'
+      style={{ display: createdProduct ? '' : 'none' }}
+    >
+      <h2>{createdProduct}</h2>
+    </div>
+  );
+
+  const showLoading = () =>
+    loading && (
+      <div className='alert alert-showSuccess'>
+        <h2>Loading...</h2>
+      </div>
+    );
+
+  const goBack = () => (
+    <div className='mt-5'>
+      <Link to='/admin/dashboard' className='text-warning'>
+        Back to dashboard
+      </Link>
+    </div>
+  );
+
   return (
     <Layout
       title='Add a new product'
       description={`G'day ${user.name}, ready to add a new product ?`}
     >
       <div className='row'>
-        <div className='col-md-8 offset-md-2'>{newPostForm()}</div>
+        <div className='col-md-8 offset-md-2'>
+          {goBack()}
+          {showLoading()}
+          {showSuccess()}
+          {showError()}
+          {newPostForm()}
+        </div>
       </div>
     </Layout>
   );
