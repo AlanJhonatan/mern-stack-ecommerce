@@ -6,6 +6,9 @@ import Checkbox from './Checkbox';
 import { getCategories } from './apiCore';
 
 const Shop = () => {
+  const [myFilters, setMyFilters] = useState({
+    filters: { category: [], price: [] },
+  });
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(false);
 
@@ -25,7 +28,11 @@ const Shop = () => {
   }, []);
 
   const handleFilters = (filters, filterBy) => {
-    console.log('SHOP', filters);
+    // console.log('SHOP', filters);
+    const newFilters = { ...myFilters };
+    newFilters.filters[filterBy] = filters;
+
+    setMyFilters(newFilters);
   };
 
   return (
@@ -44,7 +51,7 @@ const Shop = () => {
             />
           </ul>
         </div>
-        <div className='col-8'>right sidebar</div>
+        <div className='col-8'>{JSON.stringify(myFilters)}</div>
       </div>
     </Layout>
   );
