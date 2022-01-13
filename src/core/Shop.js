@@ -4,6 +4,7 @@ import Card from './Card';
 import Checkbox from './Checkbox';
 
 import { getCategories } from './apiCore';
+import { prices } from './fixedPrices';
 
 const Shop = () => {
   const [myFilters, setMyFilters] = useState({
@@ -31,7 +32,6 @@ const Shop = () => {
     // console.log('SHOP', filters);
     const newFilters = { ...myFilters };
     newFilters.filters[filterBy] = filters;
-
     setMyFilters(newFilters);
   };
 
