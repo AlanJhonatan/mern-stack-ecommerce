@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
 import Checkbox from './Checkbox';
 import RadioBox from './RadioBox';
+import Card from './Card';
 
 import { getCategories, getFilteredProducts } from './apiCore';
 import { prices } from './fixedPrices';
@@ -14,7 +15,7 @@ const Shop = () => {
   const [error, setError] = useState(false);
   const [limit, setLimit] = useState(6);
   const [skip, setSkip] = useState(0);
-  const [filteredResults, setFilteredResults] = useState(0);
+  const [filteredResults, setFilteredResults] = useState([]);
 
   const init = () => {
     getCategories().then((data) => {
@@ -34,7 +35,7 @@ const Shop = () => {
         setError(data.error);
         return;
       }
-      setFilteredResults(data);
+      setFilteredResults(data.data);
     });
   };
 
@@ -94,7 +95,14 @@ const Shop = () => {
             />
           </ul>
         </div>
-        <div className='col-8'>{JSON.stringify(filteredResults)}</div>
+        <div className='col-8'>
+          <h2 className='mb-4'>Products</h2>
+          <div className='row'>
+            {filteredResults.map((product, idx) => (
+              <Card key={idx} product={product}></Card>
+            ))}
+          </div>
+        </div>
       </div>
     </Layout>
   );
