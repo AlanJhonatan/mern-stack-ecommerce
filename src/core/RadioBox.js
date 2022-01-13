@@ -14,7 +14,7 @@ const RadioBox = ({ prices, handleFilters }) => {
         type='radio'
         className='mr-2 ml-4'
         name={price}
-        value={`${price.id}`}
+        value={`${price._id}`}
         onChange={handleChange}
       />
       <label className='form-check-label'>{price.name}</label>
