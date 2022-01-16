@@ -30,7 +30,6 @@ const Shop = () => {
   };
 
   const loadFilteredResults = (newFilters) => {
-    // console.log(newFilters);
     getFilteredProducts(skip, limit, newFilters).then((data) => {
       if (data.error) {
         setError(data.error);
@@ -45,15 +44,26 @@ const Shop = () => {
   const loadMore = (newFilters) => {
     let toSkip = skip + limit;
 
-    getFilteredProducts(toSkip, limit, newFilters).then((data) => {
+    getFilteredProducts(toSkip, limit, newFilters.filters).then((data) => {
       if (data.error) {
         setError(data.error);
         return;
       }
-      setFilteredResults(data.data);
+      setFilteredResults([...filteredResults, ...data.data]);
       setSize(data.size);
       setSkip(0);
     });
+  };
+
+  const loadMoreButton = () => {
+    return (
+      size > 0 &&
+      size >= limit && (
+        <button onClick={loadMore} className='btn btn-warning mb-5'>
+          Load more
+        </button>
+      )
+    );
   };
 
   useEffect(() => {
@@ -119,6 +129,8 @@ const Shop = () => {
               <Card key={idx} product={product}></Card>
             ))}
           </div>
+          <hr />
+          {loadMoreButton()}
         </div>
       </div>
     </Layout>
