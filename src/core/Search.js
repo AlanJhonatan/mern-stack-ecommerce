@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getCategories } from './apiCore';
+import Card from './Card';
+
+import { getCategories, list } from './apiCore';
 
 const Search = () => {
   const [data, setData] = useState({
@@ -32,12 +34,35 @@ const Search = () => {
   };
 
   const searchData = () => {
-    console.log(search, category);
+    if (!search) {
+      return;
+    }
+
+    list({ search: search || undefined, category: category }).then(
+      (response) => {
+        if (response.error) {
+          console.log(response.error);
+          return;
+        }
+
+        setData({ ...data, results: response, searched: true });
+      }
+    );
   };
 
   const searchSubmit = (event) => {
     event.preventDefault();
     searchData();
+  };
+
+  const searchedProducts = (results = []) => {
+    return (
+      <div className='row'>
+        {results.map((product, idx) => (
+          <Card key={idx} product={product} />
+        ))}
+      </div>
+    );
   };
 
   const searchForm = () => (
@@ -73,6 +98,10 @@ const Search = () => {
   return (
     <div className='row'>
       <div className='container mb-3'>{searchForm()}</div>
+      <div className='container-fluid mb-3'>
+        {searched && <h3>Search Results:</h3>}
+        {searchedProducts(results)}
+      </div>
     </div>
   );
 };
