@@ -65,13 +65,23 @@ const Search = () => {
     );
   };
 
+  const searchMessage = (searched, results) => {
+    if (!searched) return;
+
+    if (searched && results.length) {
+      return `Found ${results.length} products !`;
+    }
+
+    return `No products found ! :(`;
+  };
+
   const searchForm = () => (
     <form onSubmit={searchSubmit}>
       <span className='input-group-text'>
         <div className='input-group input-group-lg'>
           <div className='input-group-prepend'>
             <select className='btn mr-2' onChange={handleChange('category')}>
-              <option value='All'>Pick Category</option>
+              <option value='All'>All</option>
               {categories.map((c, idx) => (
                 <option key={idx} value={c._id}>
                   {c.name}
@@ -99,7 +109,7 @@ const Search = () => {
     <div className='row'>
       <div className='container mb-3'>{searchForm()}</div>
       <div className='container-fluid mb-3'>
-        {searched && <h3>Search Results:</h3>}
+        <h2 className='mt-4 mb-4'>{searchMessage(searched, results)}</h2>
         {searchedProducts(results)}
       </div>
     </div>
