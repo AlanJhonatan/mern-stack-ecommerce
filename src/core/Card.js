@@ -6,6 +6,7 @@ import ShowImage from './ShowImage';
 
 const Card = ({ product, showViewProductButton = true }) => {
   const showViewButton = (showViewProductButton) => {
+    console.log(showViewProductButton);
     return (
       showViewProductButton && (
         <Link to={`/product/${product._id}`} className='mr-2'>
@@ -50,7 +51,7 @@ const Card = ({ product, showViewProductButton = true }) => {
         <br />
         {showViewButton(showViewProductButton)}
 
-        {showAddToCartButton}
+        {showAddToCartButton()}
       </div>
     </div>
   );
