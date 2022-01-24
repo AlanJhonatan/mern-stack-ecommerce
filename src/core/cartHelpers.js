@@ -51,3 +51,24 @@ export const getCart = () => {
 
   return [];
 };
+
+export const updateItem = (productId, count) => {
+  let cart = [];
+
+  if (typeof window === 'undefined') {
+    console.error('Error: No window object');
+    return cart;
+  }
+
+  if (localStorage.getItem('cart')) {
+    cart = JSON.parse(localStorage.getItem('cart'));
+  }
+
+  cart.map((product, idx) => {
+    if (product._id === productId) {
+      cart[idx].count = count;
+    }
+  });
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+};
