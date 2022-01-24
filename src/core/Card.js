@@ -4,14 +4,16 @@ import moment from 'moment';
 
 import ShowImage from './ShowImage';
 
-import { addItem } from './cartHelpers';
+import { addItem, updateItem } from './cartHelpers';
 
 const Card = ({
   product,
   showViewProductButton = true,
   showAddToCartButton = true,
+  cartUpdate = false,
 }) => {
   const [redirect, setRedirect] = useState(false);
+  const [count, setCount] = useState(product.count);
 
   const showViewButton = (showViewProductButton) => {
     return (
@@ -52,6 +54,34 @@ const Card = ({
     );
   };
 
+  const handleChange = (productId) => (event) => {
+    setCount(event.target.value < 1 ? 1 : event.target.value);
+
+    if (event.target.value >= 1) {
+      updateItem(productId, event.target.value);
+    }
+  };
+
+  const showCartUpdateOptions = () => {
+    return (
+      cartUpdate && (
+        <div>
+          <div className='input-group mb-3'>
+            <div className='input-group-prepend'>
+              <span className='input-group-text'>Adjust Quantity</span>
+            </div>
+            <input
+              type='number'
+              className='form-control'
+              value={count}
+              onChange={handleChange(product._id)}
+            />
+          </div>
+        </div>
+      )
+    );
+  };
+
   return (
     <div className='card'>
       <div className='card-header name'>{product.name}</div>
@@ -74,6 +104,7 @@ const Card = ({
         {showViewButton(showViewProductButton)}
 
         {showCartButton(showAddToCartButton)}
+        {showCartUpdateOptions(cartUpdate)}
       </div>
     </div>
   );
