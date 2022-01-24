@@ -6,7 +6,11 @@ import ShowImage from './ShowImage';
 
 import { addItem } from './cartHelpers';
 
-const Card = ({ product, showViewProductButton = true }) => {
+const Card = ({
+  product,
+  showViewProductButton = true,
+  showAddToCartButton = true,
+}) => {
   const [redirect, setRedirect] = useState(false);
 
   const showViewButton = (showViewProductButton) => {
@@ -33,13 +37,12 @@ const Card = ({ product, showViewProductButton = true }) => {
     }
   };
 
-  const showAddToCartButton = () => {
-    return (
+  const showCartButton = (showAddToCartButton) =>
+    showAddToCartButton && (
       <button className='btn btn-outline-warning mt-2 mb-2' onClick={addToCart}>
         Add to cart
       </button>
     );
-  };
 
   const showStock = (quantity) => {
     return quantity > 0 ? (
@@ -48,6 +51,7 @@ const Card = ({ product, showViewProductButton = true }) => {
       <span className='badge badge-warning badge-pill'>Out of stock</span>
     );
   };
+
   return (
     <div className='card'>
       <div className='card-header name'>{product.name}</div>
@@ -69,7 +73,7 @@ const Card = ({ product, showViewProductButton = true }) => {
         <br />
         {showViewButton(showViewProductButton)}
 
-        {showAddToCartButton()}
+        {showCartButton(showAddToCartButton)}
       </div>
     </div>
   );
