@@ -6,6 +6,7 @@ import Signup from './user/Signup';
 import Signin from './user/Signin';
 import Home from './core/Home';
 import Shop from './core/Shop';
+import Cart from './core/Cart';
 
 import Dashboard from './user/UserDashboard';
 import AdminDashboard from './user/AdminDashboard';
@@ -22,6 +23,7 @@ const Routes = () => {
       <Switch>
         <Route path='/' exact component={Home} />
         <Route path='/product/:productId' exact component={Product} />
+        <Route path='/cart' exact component={Cart} />
         <Route path='/signin' exact component={Signin} />
         <Route path='/signup' exact component={Signup} />
         <Route path='/shop' exact component={Shop} />
