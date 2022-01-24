@@ -25,3 +25,16 @@ export const addItem = (item, next) => {
   localStorage.setItem('cart', JSON.stringify(cart));
   next();
 };
+
+export const itemTotal = () => {
+  if (typeof window === 'undefined') {
+    console.log('Error: Window object is undefined');
+    return;
+  }
+
+  if (localStorage.getItem('cart')) {
+    return JSON.parse(localStorage.getItem('cart')).length;
+  }
+
+  return 0;
+};
