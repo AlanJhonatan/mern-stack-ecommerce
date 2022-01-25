@@ -4,13 +4,14 @@ import moment from 'moment';
 
 import ShowImage from './ShowImage';
 
-import { addItem, updateItem } from './cartHelpers';
+import { addItem, updateItem, removeItem } from './cartHelpers';
 
 const Card = ({
   product,
   showViewProductButton = true,
   showAddToCartButton = true,
   cartUpdate = false,
+  showRemoveProductButton = false,
 }) => {
   const [redirect, setRedirect] = useState(false);
   const [count, setCount] = useState(product.count);
@@ -62,7 +63,17 @@ const Card = ({
     }
   };
 
-  const showCartUpdateOptions = () => {
+  const showRemoveButton = (showRemoveProductButton) =>
+    showRemoveProductButton && (
+      <button
+        className='btn btn-outline-danger mt-2 mb-2'
+        onClick={() => removeItem(product._id)}
+      >
+        Remove Product
+      </button>
+    );
+
+  const showCartUpdateOptions = (cartUpdate) => {
     return (
       cartUpdate && (
         <div>
@@ -105,6 +116,7 @@ const Card = ({
 
         {showCartButton(showAddToCartButton)}
         {showCartUpdateOptions(cartUpdate)}
+        {showRemoveButton(showRemoveProductButton)}
       </div>
     </div>
   );
