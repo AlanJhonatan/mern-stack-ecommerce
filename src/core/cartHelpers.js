@@ -64,11 +64,34 @@ export const updateItem = (productId, count) => {
     cart = JSON.parse(localStorage.getItem('cart'));
   }
 
-  cart.map((product, idx) => {
+  cart.forEach((product, idx) => {
     if (product._id === productId) {
       cart[idx].count = count;
     }
   });
 
   localStorage.setItem('cart', JSON.stringify(cart));
+};
+
+export const removeItem = (productId, count) => {
+  let cart = [];
+
+  if (typeof window === 'undefined') {
+    console.error('Error: No window object');
+    return cart;
+  }
+
+  if (localStorage.getItem('cart')) {
+    cart = JSON.parse(localStorage.getItem('cart'));
+  }
+
+  cart.forEach((product, idx) => {
+    if (product._id === productId) {
+      cart.splice(idx, 1);
+    }
+  });
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+
+  return cart;
 };
