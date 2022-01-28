@@ -1,12 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-// import Card from './Card';
-// import Search from './Search';
+import DropIn from 'braintree-web-drop-in-react';
 
 import { isAuthenticated } from '../auth';
+import { getBraintreeClientToken } from './apiCore';
 
 const Checkout = ({ products }) => {
+  const [data, setData] = useState({
+    success: false,
+    clientToken: null,
+    error: '',
+    instance: {},
+    address: '',
+  });
+
+  const userId = isAuthenticated() && isAuthenticated().user._id;
+  const token = isAuthenticated() && isAuthenticated().token;
+
+  const getToken = (userId, token) => {
+    getBraintreeClientToken(userId, token).then((data) => {
+      if (data.error) {
+        console.log(data.error);
+        return;
+      }
+
+      setData({ ...data, clientToken: data.clientToken });
+    });
+  };
+
+  useEffect(() => {
+    getToken(userId, token);
+  }, []);
+
   const getTotal = () => {
     return products.reduce((currentValue, nextValue) => {
       return currentValue + nextValue.count * nextValue.price;
@@ -15,12 +41,29 @@ const Checkout = ({ products }) => {
 
   const showCheckout = () =>
     isAuthenticated() ? (
-      <button className='btn btn-success'>Checkout</button>
+      <div>{showDropIn()}</div>
     ) : (
       <Link to='/signin'>
         <button className='btn btn-primary'>Sign in to Checkout</button>
       </Link>
     );
+
+  const showDropIn = () => (
+    <div>
+      {data.clientToken !== null && products.length > 0 ? (
+        <div>
+          <DropIn
+            options={{
+              authorization: data.clientToken,
+            }}
+            onInstance={(instance) => (data.instance = instance)}
+          />
+
+          <button className='btn btn-success'>Checkout</button>
+        </div>
+      ) : null}
+    </div>
+  );
 
   return (
     <div>
