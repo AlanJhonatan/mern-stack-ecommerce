@@ -1,6 +1,6 @@
 {
   "name": "mern-stack-ecommerce-frontend",
-  "author: "AlanJhonatan",
+  "author": "AlanJhonatan <alan.amorim.franca@gmail.com> (https://www.linkedin.com/in/alanjhonatan/)",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
