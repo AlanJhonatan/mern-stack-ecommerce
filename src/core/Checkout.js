@@ -21,7 +21,7 @@ const Checkout = ({ products }) => {
   const getToken = (userId, token) => {
     getBraintreeClientToken(userId, token).then((data) => {
       if (data.error) {
-        console.log(data.error);
+        setData({ ...data, error: data.error });
         return;
       }
 
