@@ -49,7 +49,7 @@ const Checkout = ({ products }) => {
     );
 
   const showDropIn = () => (
-    <div>
+    <div onBlur={() => setData({ ...data, error: '' })}>
       {data.clientToken && products.length ? (
         <div>
           <DropIn
@@ -59,16 +59,57 @@ const Checkout = ({ products }) => {
             onInstance={(instance) => (data.instance = instance)}
           />
 
-          <button className='btn btn-success'>Checkout</button>
+          <button onClick={buy} className='btn btn-success'>
+            Pay
+          </button>
         </div>
       ) : null}
+    </div>
+  );
+
+  const buy = () => {
+    // send the nonce to your server
+    // nonce is => data.instance.requrestPaymentMethod()
+    let nonce;
+
+    if (!data.instance) {
+      console.log('instance doesnt exists');
+      return;
+    }
+
+    let getNonce = data.instance
+      .requestPaymentMethod()
+      .then((data) => {
+        console.log(data);
+        nonce = data.nonce;
+
+        //once you have nonce (card type, card number) send nonce as 'paymentMethodNonce'
+        // and also total to be charged
+        console.log(
+          'send nonce and total to process:',
+          nonce,
+          getTotal(products)
+        );
+      })
+      .catch((error) => {
+        console.log('dropin error:', error);
+        setData({ ...data, error: error.message });
+      });
+  };
+
+  const showError = (error) => (
+    <div
+      className='alert alert-danger'
+      style={{ display: error ? '' : 'none' }}
+    >
+      {error}
     </div>
   );
 
   return (
     <div>
       <h2>Total: ${getTotal()}</h2>
-
+      {showError(data.error)}
       {showCheckout()}
     </div>
   );
