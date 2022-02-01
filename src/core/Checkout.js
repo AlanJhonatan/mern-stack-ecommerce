@@ -50,7 +50,7 @@ const Checkout = ({ products }) => {
 
   const showDropIn = () => (
     <div>
-      {data.clientToken !== null && products.length > 0 ? (
+      {data.clientToken && products.length ? (
         <div>
           <DropIn
             options={{
