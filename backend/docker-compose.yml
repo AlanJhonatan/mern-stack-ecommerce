@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - './.docker/database:/data/db'
+
+  mern-stack-backend:
+    build: .
+    container_name: mern-stack-backend
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/home/node/mern-stack-backend
+    depends_on:
+      - mongo
