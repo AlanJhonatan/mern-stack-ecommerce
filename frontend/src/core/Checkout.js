@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import DropIn from 'braintree-web-drop-in-react';
 
 import { isAuthenticated } from '../auth';
-import { getBraintreeClientToken } from './apiCore';
+import { getBraintreeClientToken, processPayment } from './apiCore';
 
 const Checkout = ({ products }) => {
   const [data, setData] = useState({
@@ -25,7 +25,7 @@ const Checkout = ({ products }) => {
         return;
       }
 
-      setData({ ...data, clientToken: data.clientToken });
+      setData({ clientToken: data.clientToken });
     });
   };
 
@@ -85,11 +85,26 @@ const Checkout = ({ products }) => {
 
         //once you have nonce (card type, card number) send nonce as 'paymentMethodNonce'
         // and also total to be charged
-        console.log(
-          'send nonce and total to process:',
-          nonce,
-          getTotal(products)
-        );
+        // console.log(
+        //   'send nonce and total to process:',
+        //   nonce,
+        //   getTotal(products)
+        // );
+
+        const paymentData = {
+          paymentMethodNonce: nonce,
+          amount: getTotal(products),
+        };
+
+        processPayment(userId, token, paymentData)
+          .then((response) => {
+            // console.log(response)
+            setData({ ...data, success: response.success });
+
+            // empty cart
+            // create order
+          })
+          .catch((error) => console.log(error));
       })
       .catch((error) => {
         console.log('dropin error:', error);
@@ -106,9 +121,19 @@ const Checkout = ({ products }) => {
     </div>
   );
 
+  const showSuccess = (success) => (
+    <div
+      className='alert alert-info'
+      style={{ display: success ? '' : 'none' }}
+    >
+      Thanks ! Your payment was successfull ! :)
+    </div>
+  );
+
   return (
     <div>
       <h2>Total: ${getTotal()}</h2>
+      {showSuccess(data.success)}
       {showError(data.error)}
       {showCheckout()}
     </div>
