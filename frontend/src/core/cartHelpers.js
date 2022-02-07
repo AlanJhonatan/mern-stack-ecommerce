@@ -95,3 +95,13 @@ export const removeItem = (productId, count) => {
 
   return cart;
 };
+
+export const emptyCart = (next) => {
+  if (typeof window === 'undefined') {
+    console.log('window is not instantiated !');
+    return;
+  }
+
+  localStorage.removeItem('cart');
+  next();
+};
