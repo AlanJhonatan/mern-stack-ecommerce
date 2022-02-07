@@ -10,6 +10,7 @@ import { getBraintreeClientToken, processPayment } from './apiCore';
 
 const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
   const [data, setData] = useState({
+    loading: false,
     success: false,
     clientToken: null,
     error: '',
@@ -73,6 +74,7 @@ const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
   );
 
   const buy = () => {
+    setData({ loading: true });
     // send the nonce to your server
     // nonce is => data.instance.requrestPaymentMethod()
     let nonce;
@@ -108,12 +110,16 @@ const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
             emptyCart(() => {
               setRun(!run);
               console.log('payment success, empty cart');
+              setData({ loading: false });
             });
 
             // empty cart
             // create order
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            console.log(error);
+            setData({ loading: false });
+          });
       })
       .catch((error) => {
         console.log('dropin error:', error);
@@ -139,9 +145,12 @@ const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
     </div>
   );
 
+  const showLoading = (loading) => loading && <h2>Loading...</h2>;
+
   return (
     <div>
       <h2>Total: ${getTotal()}</h2>
+      {showLoading()}
       {showSuccess(data.success)}
       {showError(data.error)}
       {showCheckout()}
