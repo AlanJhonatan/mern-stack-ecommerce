@@ -42,19 +42,33 @@ const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
     }, 0);
   };
 
-  const showCheckout = () =>
-    isAuthenticated() ? (
+  const showCheckout = () => {
+    return isAuthenticated() ? (
       <div>{showDropIn()}</div>
     ) : (
       <Link to='/signin'>
         <button className='btn btn-primary'>Sign in to Checkout</button>
       </Link>
     );
+  };
+
+  const handleAddress = (event) => {
+    setData({ ...data, address: event.target.value });
+  };
 
   const showDropIn = () => (
     <div onBlur={() => setData({ ...data, error: '' })}>
       {data.clientToken && products.length ? (
         <div>
+          <div className='form-group mb-3'>
+            <label className='text-muted'>Delivery address:</label>
+            <textarea
+              onChange={handleAddress}
+              className='form-control'
+              value={data.address}
+              placeholder='Type your delivery address here...'
+            />
+          </div>
           <DropIn
             options={{
               authorization: data.clientToken,
