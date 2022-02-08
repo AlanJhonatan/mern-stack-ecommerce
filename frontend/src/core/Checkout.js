@@ -6,7 +6,11 @@ import DropIn from 'braintree-web-drop-in-react';
 import { isAuthenticated } from '../auth';
 
 import { emptyCart } from './cartHelpers';
-import { getBraintreeClientToken, processPayment } from './apiCore';
+import {
+  createOrder,
+  getBraintreeClientToken,
+  processPayment,
+} from './apiCore';
 
 const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
   const [data, setData] = useState({
@@ -119,16 +123,25 @@ const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
 
         processPayment(userId, token, paymentData)
           .then((response) => {
-            // console.log(response)
+            console.log(response);
+
+            const createOrderData = {
+              products: products,
+              transaction_id: response.transaction_id,
+              amount: response.transaction.amount,
+              address: data.address,
+            };
+
+            createOrder(userId, token, createOrderData)
+              .then((data) => console.log(data))
+              .catch((err) => console.log(err));
+
             setData({ ...data, success: response.success });
             emptyCart(() => {
               setRun(!run);
               console.log('payment success, empty cart');
               setData({ loading: false });
             });
-
-            // empty cart
-            // create order
           })
           .catch((error) => {
             console.log(error);
