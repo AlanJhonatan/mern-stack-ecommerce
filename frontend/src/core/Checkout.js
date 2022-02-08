@@ -150,7 +150,7 @@ const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
   return (
     <div>
       <h2>Total: ${getTotal()}</h2>
-      {showLoading()}
+      {showLoading(data.loading)}
       {showSuccess(data.success)}
       {showError(data.error)}
       {showCheckout()}
