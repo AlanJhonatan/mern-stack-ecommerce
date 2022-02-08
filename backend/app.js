@@ -13,6 +13,7 @@ const userRoutes = require('./routes/user');
 const productRoutes = require('./routes/product');
 const categoryRoutes = require('./routes/category');
 const braintreeRoutes = require('./routes/braintree');
+const orderRoutes = require('./routes/order');
 
 // Initialize server app
 const app = express();
@@ -35,6 +36,7 @@ app.use('/api', userRoutes);
 app.use('/api', productRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', braintreeRoutes);
+app.use('/api', orderRoutes);
 
 // PORT config handling
 const port = process.env.PORT || 8000;
